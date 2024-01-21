@@ -1,0 +1,58 @@
+import time
+
+class UserInterface:
+    def greeting(self):
+        # Display a welcome message for the user.
+        print("""
+        ************************
+        Welcome to countdown app!
+        To use the countdown, you
+        should enter the duration
+        in secs.
+        ************************
+        """)
+
+    def get_user_input(self):
+        # Continuously prompt the user until a valid integer is entered.
+        while True:
+            try:
+                user_time = int(input("Enter a time in seconds: "))
+                return user_time
+            except ValueError:
+                # Handle the case when the entered value is not a valid integer.
+                print("Please enter a valid integer.")
+
+class CountdownLogic:
+    def __init__(self, user_time):
+        # Initialize CountdownLogic object with the user-provided time.
+        self.user_time = user_time
+
+    def countdown(self):
+        # Countdown logic with a sleep of 1 second between each update.
+        while self.user_time >= 0:
+            mins, secs = divmod(self.user_time, 60)
+            timer = '{:02d}:{:02d}'.format(mins, secs)
+            print(timer, end='\r')
+            time.sleep(1)
+            self.user_time -= 1
+        print('Finished!')
+
+class CountdownTimer:
+    def __init__(self):
+        # Initialize CountdownTimer object with UserInterface and CountdownLogic.
+        self.user_interface = UserInterface()
+        self.countdown_logic = None
+
+    def start_countdown(self):
+        # Start the countdown by displaying a greeting, getting user input
+        self.user_interface.greeting()
+        user_time = self.user_interface.get_user_input()
+
+        # Initiating countdown logic
+        self.countdown_logic = CountdownLogic(user_time)
+        self.countdown_logic.countdown()
+
+if __name__ == '__main__':
+    # Create a CountdownTimer object and start the countdown.
+    timer_obj = CountdownTimer()
+    timer_obj.start_countdown()
